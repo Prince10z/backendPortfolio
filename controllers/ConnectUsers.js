@@ -29,13 +29,20 @@ async function handleUpdatingData(req, res) { // Correct function name here
 }
 async function handlingReadingUsers(req, res) {
     try {
-        const data = cUserData.find({});
-        const dataset = {
-            id: data._id,
-            username: data.Fullname,
-            email: data.Email,
-            msg: data.Msg
-        };
+        const data = await cUserData.find({});
+
+        const dataset = data.map(item => ({
+            id: item._id,
+            username: item.Fullname,
+            email: item.Email,
+            msg: item.Msg
+        }));
+        // const dataset = {
+        // id: data._id,
+        // username: data.Fullname,
+        // email: data.Email,
+        // msg: data.Msg
+        // };
         return res.status(200).json(dataset);
 
     }
