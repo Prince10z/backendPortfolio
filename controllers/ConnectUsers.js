@@ -35,7 +35,8 @@ async function handlingReadingUsers(req, res) {
             id: item._id,
             username: item.Fullname,
             email: item.Email,
-            msg: item.Msg
+            msg: item.Msg,
+            sendTime: item.createdAt,
         }));
         // const dataset = {
         // id: data._id,
