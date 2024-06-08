@@ -62,9 +62,31 @@ async function handlingReadingUsers(req, res) {
     }
 }
 
+async function handledeleteItem(req, res) {
+    const body = req.body;
+    if (!body.id) {
+        return res.status(400).json({ status: "Requires id" });
+    }
+    try {
+        const data = await cUserData.findById(body.id);
+        console.log(data);
+        if (data) {
+            await cUserData.findByIdAndDelete(body.id);
+            res.status(200).json({ status: "Success" });
+        } else {
+            res.status(403).json({ status: "Not item available" });
+        }
+
+
+    } catch (e) {
+        return res.status(500).json({ status: "Server Error" });
+    }
+}
+
 module.exports = {
     handleUpdatingData,
-    handlingReadingUsers
+    handlingReadingUsers,
+    handledeleteItem
 
     // Correct function name here
 };
