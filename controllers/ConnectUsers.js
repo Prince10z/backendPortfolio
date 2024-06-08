@@ -69,7 +69,6 @@ async function handledeleteItem(req, res) {
     }
     try {
         const data = await cUserData.findById(body.id);
-        console.log(data);
         if (data) {
             await cUserData.findByIdAndDelete(body.id);
             res.status(200).json({ status: "Success" });
@@ -79,7 +78,7 @@ async function handledeleteItem(req, res) {
 
 
     } catch (e) {
-        return res.status(500).json({ status: "Server Error" });
+        return res.status(500).json({ status: "Error" });
     }
 }
 
