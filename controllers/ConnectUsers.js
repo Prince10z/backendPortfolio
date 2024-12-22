@@ -1,91 +1,99 @@
 const cUserData = require("../models/connectUser");
 
-async function handleUpdatingData(req, res) { // Correct function name here
-    try {
-        const body = req.body;
-        if (!body.fullname || !body.email || !body.msg) {
-            return res.status(400).json({ status: "Error", message: "First fill the required info" });
-        }
-        await cUserData.create({
-            Fullname: body.fullname,
-            Email: body.email,
-            Msg: body.msg
-        });
-        return res.status(200).json({ status: "Success" });
-
-    } catch (e) {
-        if (e.name === 'ValidationError') {
-            const validationErrors = {};
-            // Extract validation errors and format them
-            for (const field in e.errors) {
-                validationErrors[field] = e.errors[field].message;
-            }
-            return res.status(400).json({ status: "Error", message: "Validation error", errors: validationErrors });
-        } else {
-            // Handle other errors
-            return res.status(500).json({ status: "Error", message: e.message });
-        }
+async function handleUpdatingData(req, res) {
+  // Correct function name here
+  try {
+    const body = req.body;
+    if (!body.fullname || !body.email || !body.msg) {
+      return res
+        .status(400)
+        .json({ status: "Error", message: "First fill the required info" });
     }
+    await cUserData.create({
+      Fullname: body.fullname,
+      Email: body.email,
+      Msg: body.msg,
+    });
+    return res.status(200).json({ status: "Success" });
+  } catch (e) {
+    if (e.name === "ValidationError") {
+      const validationErrors = {};
+      // Extract validation errors and format them
+      for (const field in e.errors) {
+        validationErrors[field] = e.errors[field].message;
+      }
+      return res.status(400).json({
+        status: "Error",
+        message: "Validation error",
+        errors: validationErrors,
+      });
+    } else {
+      // Handle other errors
+      return res.status(500).json({ status: "Error", message: e.message });
+    }
+  }
 }
 async function handlingReadingUsers(req, res) {
-    try {
-        const data = await cUserData.find({});
+  try {
+    const data = await cUserData.find({});
 
-        const dataset = data.map(item => ({
-            id: item._id,
-            username: item.Fullname,
-            email: item.Email,
-            msg: item.Msg,
-            sendTime: item.createdAt,
-        }));
-        // const dataset = {
-        // id: data._id,
-        // username: data.Fullname,
-        // email: data.Email,
-        // msg: data.Msg
-        // };
-        return res.status(200).json(dataset);
-
+    const dataset = data.map((item) => ({
+      id: item._id,
+      username: item.Fullname,
+      email: item.Email,
+      msg: item.Msg,
+      sendTime: item.createdAt,
+    }));
+    return res.status(200).json(dataset);
+  } catch (e) {
+    if (e.name === "ValidationError") {
+      const validationErrors = {};
+      // Extract validation errors and format them
+      for (const field in e.errors) {
+        validationErrors[field] = e.errors[field].message;
+      }
+      return res.status(400).json({
+        status: "Error",
+        message: "Validation error",
+        errors: validationErrors,
+      });
+    } else {
+      // Handle other errors
+      return res.status(500).json({ status: "Error", message: e.message });
     }
-    catch (e) {
-        if (e.name === 'ValidationError') {
-            const validationErrors = {};
-            // Extract validation errors and format them
-            for (const field in e.errors) {
-                validationErrors[field] = e.errors[field].message;
-            }
-            return res.status(400).json({ status: "Error", message: "Validation error", errors: validationErrors });
-        } else {
-            // Handle other errors
-            return res.status(500).json({ status: "Error", message: e.message });
-        }
-    }
+  }
 }
 
 async function handledeleteItem(req, res) {
-    const body = req.body;
-    if (!body.id) {
-        return res.status(400).json({ status: "Requires id" });
+  const body = req.body;
+  if (!body.id) {
+    return res.status(400).json({ status: "Requires id" });
+  }
+  try {
+    const data = await cUserData.findById(body.id);
+    if (data) {
+      await cUserData.findByIdAndDelete(body.id);
+      res.status(200).json({ status: "Success" });
+    } else {
+      res.status(403).json({ status: "Not item available" });
     }
-    try {
-        const data = await cUserData.findById(body.id);
-        if (data) {
-            await cUserData.findByIdAndDelete(body.id);
-            res.status(200).json({ status: "Success" });
-        } else {
-            res.status(403).json({ status: "Not item available" });
-        }
-
-
-    } catch (e) {
-        return res.status(500).json({ status: "Error" });
-    }
+  } catch (e) {
+    return res.status(500).json({ status: "Error" });
+  }
+}
+async function handleDeleteAll(req, res) {
+  try {
+    const data = await cUserData.deleteMany({});
+    res.status(200).json({ status: "Success" });
+  } catch (e) {
+    return res.status(500).json({ status: "Server Error" });
+  }
 }
 
 module.exports = {
-    handleUpdatingData,
-    handlingReadingUsers,
-    handledeleteItem
-
-    // Correct function name here
+  handleUpdatingData,
+  handlingReadingUsers,
+  handledeleteItem,
+  handleDeleteAll,
+  // Correct function name here
 };
