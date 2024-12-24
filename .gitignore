@@ -1,3 +1,6 @@
 node_modules/*
 package-lock.json
 .env
+*.todo
+firebase-service-account.json.base64
+portfolio-fd287-firebase-adminsdk-lp6cc-e25c57e0b1.json

@@ -1,6 +1,5 @@
-const cUserData = require("../models/connectUser");
-
-async function handleUpdatingData(req, res) {
+import { cUserData } from "../models/connectUser.js";
+export async function handleUpdatingData(req, res) {
   // Correct function name here
   try {
     const body = req.body;
@@ -33,7 +32,7 @@ async function handleUpdatingData(req, res) {
     }
   }
 }
-async function handlingReadingUsers(req, res) {
+export async function handlingReadingUsers(req, res) {
   try {
     const data = await cUserData.find({});
 
@@ -64,7 +63,7 @@ async function handlingReadingUsers(req, res) {
   }
 }
 
-async function handledeleteItem(req, res) {
+export async function handledeleteItem(req, res) {
   const body = req.body;
   if (!body.id) {
     return res.status(400).json({ status: "Requires id" });
@@ -81,19 +80,11 @@ async function handledeleteItem(req, res) {
     return res.status(500).json({ status: "Error" });
   }
 }
-async function handleDeleteAll(req, res) {
+export async function handleDeleteAll(req, res) {
   try {
     const data = await cUserData.deleteMany({});
-    res.status(200).json({ status: "Success" });
+    return res.status(200).json({ status: "Success" });
   } catch (e) {
     return res.status(500).json({ status: "Server Error" });
   }
 }
-
-module.exports = {
-  handleUpdatingData,
-  handlingReadingUsers,
-  handledeleteItem,
-  handleDeleteAll,
-  // Correct function name here
-};
