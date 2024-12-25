@@ -33,14 +33,15 @@ app.use("/resume", routs);
 
 // Send Firebase message endpoint
 app.post("/sendmsg", (req, res) => {
+  const tokenval =
+    "dyndmYtoRzWXafdLqSLC1S:APA91bFFFFiw7p90zWX-Q65ygyMqoch8-wkSQGrW99o0dLbnsiOZ9hbBah6wg3hOcJVfE77xdRDFyVaTmNARbfl0QVsChluUcrAFZhfNv4fiKDwFcVfkSJ4";
   const message = {
     notification: {
       title: "Notif",
       body: "this is the Notification",
     },
     // Replace with actual device token
-    token:
-      "fPST2aKeSHS8CzVLGmZybN:APA91bHVqyPDizJOmw3RAQos59k9Vjf-Hz3ZWkhROyyl6gmbfdCDuCA260Y6l521MEIo4vcUOcQVwF9Hr4nSoYggw81fUSC510Gk20Nk4Oqf6bk7LS0xDXg",
+    token: tokenval,
   };
 
   getMessaging()
@@ -49,8 +50,7 @@ app.post("/sendmsg", (req, res) => {
       console.log("Successfully sent message", response);
       return res.status(200).json({
         message: "Successfully sent message",
-        token:
-          "fPST2aKeSHS8CzVLGmZybN:APA91bHVqyPDizJOmw3RAQos59k9Vjf-Hz3ZWkhROyyl6gmbfdCDuCA260Y6l521MEIo4vcUOcQVwF9Hr4nSoYggw81fUSC510Gk20Nk4Oqf6bk7LS0xDXg",
+        token: tokenval,
       });
     })
     .catch((error) => {
