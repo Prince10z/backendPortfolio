@@ -24,8 +24,8 @@ export async function handleUpdatingData(req, res) {
 
     const message = {
       notification: {
-        title: body.fullname,
-        body: `${body.email}: ${body.msg}`,
+        title: `New Message from ${body.fullname}`,
+        body: `Email: ${body.email}\nMessage: ${body.msg}`,
       },
       token: tokenval,
     };
