@@ -1,5 +1,5 @@
 import { getMessaging } from "firebase-admin/messaging";
-import cUserData from "./models/cUserData"; // Adjust the path as necessary
+import { cUserData } from "../models/connectUser.js"; // Adjust the path as necessary
 
 export async function handleUpdatingData(req, res) {
   try {
