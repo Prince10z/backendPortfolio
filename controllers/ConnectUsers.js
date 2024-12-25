@@ -1,23 +1,42 @@
-import { cUserData } from "../models/connectUser.js";
+import { getMessaging } from "firebase-admin/messaging";
+import cUserData from "./models/cUserData"; // Adjust the path as necessary
+
 export async function handleUpdatingData(req, res) {
-  // Correct function name here
   try {
     const body = req.body;
-    if (!body.fullname || !body.email || !body.msg) {
+
+    // Validate required fields
+    if (!body.fullname?.trim() || !body.email?.trim() || !body.msg?.trim()) {
       return res
         .status(400)
         .json({ status: "Error", message: "First fill the required info" });
     }
+
+    // Save data to the database
     await cUserData.create({
       Fullname: body.fullname,
       Email: body.email,
       Msg: body.msg,
     });
+
+    // Prepare and send notification
+    const tokenval = process.env.NOTIFICATION_TOKEN;
+
+    const message = {
+      notification: {
+        title: body.fullname,
+        body: `${body.email}: ${body.msg}`,
+      },
+      token: tokenval,
+    };
+
+    await getMessaging().send(message);
+
+    // Respond with success
     return res.status(200).json({ status: "Success" });
   } catch (e) {
     if (e.name === "ValidationError") {
       const validationErrors = {};
-      // Extract validation errors and format them
       for (const field in e.errors) {
         validationErrors[field] = e.errors[field].message;
       }
@@ -27,11 +46,13 @@ export async function handleUpdatingData(req, res) {
         errors: validationErrors,
       });
     } else {
-      // Handle other errors
+      // Log and respond to other errors
+      console.error(e); // Log for debugging
       return res.status(500).json({ status: "Error", message: e.message });
     }
   }
 }
+
 export async function handlingReadingUsers(req, res) {
   try {
     const data = await cUserData.find({});
