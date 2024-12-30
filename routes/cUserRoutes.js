@@ -5,7 +5,9 @@ import {
   handlingReadingUsers,
   handledeleteItem,
   handleDeleteAll,
+  makeserverlive,
 } from "../controllers/ConnectUsers.js";
+routs.get("/liveServer", makeserverlive);
 routs.post("/send", handleUpdatingData);
 routs.get("/read", handlingReadingUsers);
 routs.delete("/delete", handledeleteItem);

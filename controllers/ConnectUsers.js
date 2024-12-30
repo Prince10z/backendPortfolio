@@ -83,7 +83,9 @@ export async function handlingReadingUsers(req, res) {
     }
   }
 }
-
+export function makeserverlive(req, res) {
+  return res.send("server is live again");
+}
 export async function handledeleteItem(req, res) {
   const body = req.body;
   if (!body.id) {
